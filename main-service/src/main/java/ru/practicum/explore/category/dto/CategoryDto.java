@@ -11,11 +11,11 @@ import javax.validation.constraints.NotNull;
 @ToString
 @Getter
 @Setter
-public class СategoryDto {
+public class CategoryDto {
     Long id;
     @NotNull @NotEmpty
     String name;
-    public СategoryDto() {
+    public CategoryDto() {
     }
 }
 

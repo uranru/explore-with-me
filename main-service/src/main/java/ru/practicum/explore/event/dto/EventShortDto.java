@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.practicum.explore.category.dto.СategoryDto;
+import ru.practicum.explore.category.dto.CategoryDto;
 import ru.practicum.explore.user.dto.UserShortDto;
 
 @AllArgsConstructor
@@ -14,7 +14,7 @@ import ru.practicum.explore.user.dto.UserShortDto;
 public class EventShortDto {
     Long id;
     String annotation;
-    СategoryDto category;
+    CategoryDto category;
     String description;
     String eventDate;
     Boolean paid;

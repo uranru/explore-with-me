@@ -2,7 +2,7 @@ package ru.practicum.explore.event;
 
 
 import ru.practicum.explore.category.Сategory;
-import ru.practicum.explore.category.dto.СategoryDto;
+import ru.practicum.explore.category.dto.CategoryDto;
 import ru.practicum.explore.event.dto.EventFullDto;
 import ru.practicum.explore.event.dto.EventShortDto;
 import ru.practicum.explore.event.dto.NewEventDto;
@@ -43,7 +43,7 @@ public class EventMapper {
         );
     }
 
-    public static EventShortDto toEventShortDto(Event event, СategoryDto categoryDto, UserShortDto userShortDto) {
+    public static EventShortDto toEventShortDto(Event event, CategoryDto categoryDto, UserShortDto userShortDto) {
         if (event == null) {
             return null;
         }
@@ -64,7 +64,7 @@ public class EventMapper {
 
     }
 
-    public static EventFullDto toEventFullDto(Event event, СategoryDto categoryDto, UserShortDto userShortDto) {
+    public static EventFullDto toEventFullDto(Event event, CategoryDto categoryDto, UserShortDto userShortDto) {
         if (event == null) {
             return null;
         }

@@ -8,13 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.explore.category.Сategory;
-import ru.practicum.explore.category.dto.СategoryDto;
-import ru.practicum.explore.category.СategoryMapper;
-import ru.practicum.explore.category.service.СategoryService;
+import ru.practicum.explore.category.dto.CategoryDto;
+import ru.practicum.explore.category.CategoryMapper;
+import ru.practicum.explore.category.service.CategoryService;
 import ru.practicum.explore.client.HitClient;
 import ru.practicum.explore.client.HitDto;
 import ru.practicum.explore.client.ViewClient;
-import ru.practicum.explore.client.ViewViews;
 import ru.practicum.explore.event.*;
 import ru.practicum.explore.event.dto.*;
 import ru.practicum.explore.request.Request;
@@ -41,7 +40,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final RequestRepository requestRepository;
 
-    private final СategoryService categoryService;
+    private final CategoryService categoryService;
     private final UserService userService;
 
     private final HitClient hitClient;
@@ -51,8 +50,8 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto addUserEvent(NewEventDto newEventDto, Long initiatorId) {
         log.debug("Выполнен метод addUserEvent({}, {})", newEventDto, initiatorId);
-        Сategory category = categoryService.getСategoryById(newEventDto.getCategory());
-        СategoryDto categoryDto = СategoryMapper.toСategoryDto(category);
+        Сategory category = categoryService.getCategoryById(newEventDto.getCategory());
+        CategoryDto categoryDto = CategoryMapper.toСategoryDto(category);
         User user = userService.getUserById(initiatorId);
         UserShortDto userShortDto = UserMapper.toUserShortDto(user);
 
@@ -111,7 +110,7 @@ public class EventServiceImpl implements EventService {
         Event updateEvent = eventRepository.save(event);
 
         Сategory category = updateEvent.getCategory();
-        СategoryDto categoryDto = СategoryMapper.toСategoryDto(category);
+        CategoryDto categoryDto = CategoryMapper.toСategoryDto(category);
         User user = updateEvent.getInitiator();
         UserShortDto userShortDto = UserMapper.toUserShortDto(user);
 
@@ -136,7 +135,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto getEventFullDtoById(Long eventId, HttpServletRequest request) {
         log.debug("Выполнен метод getEventFullDtoById({})",eventId);
         Event event = getEventById(eventId);
-        СategoryDto categoryDto = СategoryMapper.toСategoryDto(event.getCategory());
+        CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
 
         hitClient.addHit(HitDto.builder()
@@ -155,7 +154,7 @@ public class EventServiceImpl implements EventService {
         Event event = getEventById(eventId);
 
         if (event.getInitiator().getId() == userId) {
-            СategoryDto categoryDto = СategoryMapper.toСategoryDto(event.getCategory());
+            CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
             UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
             return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
         } else {
@@ -180,7 +179,7 @@ public class EventServiceImpl implements EventService {
         eventList.stream().forEach(
                 event -> eventShortDtoList.add(
                         EventMapper.toEventShortDto(event,
-                                СategoryMapper.toСategoryDto(event.getCategory()),
+                                CategoryMapper.toСategoryDto(event.getCategory()),
                                 UserMapper.toUserShortDto(user)
                         )
                 )
@@ -206,7 +205,7 @@ public class EventServiceImpl implements EventService {
         }
 
         event = eventRepository.save(updateEvent(event,updateEventRequest));
-        СategoryDto categoryDto = СategoryMapper.toСategoryDto(event.getCategory());
+        CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
 
         return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
@@ -234,7 +233,7 @@ public class EventServiceImpl implements EventService {
 
         event.setState(EventState.CANCELED);
         event = eventRepository.save(event);
-        СategoryDto categoryDto = СategoryMapper.toСategoryDto(event.getCategory());
+        CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
 
         return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
@@ -253,7 +252,7 @@ public class EventServiceImpl implements EventService {
         }
 
         event = eventRepository.save(updateEvent(event,adminUpdateEventRequest));
-        СategoryDto categoryDto = СategoryMapper.toСategoryDto(event.getCategory());
+        CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
 
         return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
@@ -297,7 +296,7 @@ public class EventServiceImpl implements EventService {
         eventList.stream().forEach(
                 event -> eventFullDtoList.add(
                         EventMapper.toEventFullDto(event,
-                                СategoryMapper.toСategoryDto(event.getCategory()),
+                                CategoryMapper.toСategoryDto(event.getCategory()),
                                 UserMapper.toUserShortDto(event.getInitiator())
                         )
                 )
@@ -354,7 +353,7 @@ public class EventServiceImpl implements EventService {
         eventList.stream().forEach(
                 event -> eventShortDtoList.add(
                         (EventMapper.toEventShortDto(event,
-                                СategoryMapper.toСategoryDto(event.getCategory()),
+                                CategoryMapper.toСategoryDto(event.getCategory()),
                                 UserMapper.toUserShortDto(event.getInitiator())
                         )))
                 );
@@ -388,7 +387,7 @@ public class EventServiceImpl implements EventService {
         eventList.stream().forEach(
                 event -> eventShortDtoList.add(
                         EventMapper.toEventShortDto(event,
-                                СategoryMapper.toСategoryDto(event.getCategory()),
+                                CategoryMapper.toСategoryDto(event.getCategory()),
                                 UserMapper.toUserShortDto(event.getInitiator())
                         )
                 )
@@ -401,7 +400,7 @@ public class EventServiceImpl implements EventService {
         log.debug("Выполнен метод updateEvent({}, {})",event, updateEventRequest);
 
         event.setAnnotation(updateEventRequest.getAnnotation());
-        event.setCategory(categoryService.getСategoryById(updateEventRequest.getCategory()));
+        event.setCategory(categoryService.getCategoryById(updateEventRequest.getCategory()));
         event.setDescription(updateEventRequest.getDescription());
         event.setEventDate(LocalDateTime.parse(updateEventRequest.getEventDate(),EventMapper.formatter));
         event.setPaid(updateEventRequest.getPaid());
@@ -415,7 +414,7 @@ public class EventServiceImpl implements EventService {
         log.debug("Выполнен метод updateEvent({}, {})",event, adminUpdateEventRequest);
 
         event.setAnnotation(adminUpdateEventRequest.getAnnotation());
-        event.setCategory(categoryService.getСategoryById(adminUpdateEventRequest.getCategory()));
+        event.setCategory(categoryService.getCategoryById(adminUpdateEventRequest.getCategory()));
         event.setDescription(adminUpdateEventRequest.getDescription());
         event.setEventDate(LocalDateTime.parse(adminUpdateEventRequest.getEventDate(),EventMapper.formatter));
         if (adminUpdateEventRequest.getLocation() != null) {

@@ -1,18 +1,18 @@
 package ru.practicum.explore.category;
 
-import ru.practicum.explore.category.dto.СategoryDto;
+import ru.practicum.explore.category.dto.CategoryDto;
 
-public class СategoryMapper {
+public class CategoryMapper {
 
-    public static СategoryDto toСategoryDto(Сategory category) {
-        СategoryDto categoryDto = new СategoryDto();
+    public static CategoryDto toСategoryDto(Сategory category) {
+        CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(category.getName());
         categoryDto.setId(category.getId());
 
         return categoryDto;
     }
 
-    public static Сategory toСategory(СategoryDto categoryDto) {
+    public static Сategory toСategory(CategoryDto categoryDto) {
         Сategory category = new Сategory();
         category.setName(categoryDto.getName());
         category.setId(categoryDto.getId());

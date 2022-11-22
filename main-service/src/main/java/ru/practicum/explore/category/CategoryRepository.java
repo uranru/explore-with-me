@@ -2,7 +2,7 @@ package ru.practicum.explore.category;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface СategoryRepository extends JpaRepository<Сategory, Long> {
+public interface CategoryRepository extends JpaRepository<Сategory,Long> {
 }
 
 
