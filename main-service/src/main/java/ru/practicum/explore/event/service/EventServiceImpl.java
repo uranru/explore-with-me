@@ -273,12 +273,13 @@ public class EventServiceImpl implements EventService {
             customerExpression = customerExpression
                     .and(qEvent.initiator.id.in(users));
         }
-        List<String> stringList = new ArrayList<>();
-        states.stream().forEach(myEnum -> stringList.add(myEnum.toString()));
+
+        //List<String> stringList = new ArrayList<>();
+        //states.stream().forEach(myEnum -> stringList.add(myEnum.toString()));
 
         if (states != null && !states.isEmpty()) {
             customerExpression = customerExpression
-                    .and(qEvent.state.stringValue().in(stringList));
+                    .and(qEvent.state.in(states));
         }
 
         if (categories != null && !categories.isEmpty()) {

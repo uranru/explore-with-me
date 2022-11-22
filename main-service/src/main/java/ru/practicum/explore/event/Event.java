@@ -58,6 +58,7 @@ public class Event {
     @Column(name = "event_confirmed_requests")
     private Integer confirmedRequests;
     @Column(name = "event_state")
+    @Enumerated(EnumType.STRING)
     private EventState state;
 
     public Event() {
