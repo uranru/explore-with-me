@@ -342,7 +342,7 @@ public class EventServiceImpl implements EventService {
             if (onlyAvailable == true) {
 
             customerExpression = customerExpression
-                        .and(qEvent.confirmedRequests.gt(eventsGroupByRequests.get(qEvent.id)));
+                        .and(qEvent.confirmedRequests.gt((Integer) eventsGroupByRequests.get(qEvent.id)));
             }
         }
 
