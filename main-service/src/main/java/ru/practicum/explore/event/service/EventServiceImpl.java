@@ -339,8 +339,7 @@ public class EventServiceImpl implements EventService {
                     .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.formatter)));
         }
         if (onlyAvailable != null) {
-            if (onlyAvailable == true) {
-
+            if (onlyAvailable) {
             Integer intGet = eventsGroupByRequests.get(qEvent.id);
 
             customerExpression = customerExpression
