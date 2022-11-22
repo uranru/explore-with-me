@@ -340,10 +340,10 @@ public class EventServiceImpl implements EventService {
         }
         if (onlyAvailable != null) {
             if (onlyAvailable) {
-            Integer intGet = eventsGroupByRequests.get(qEvent.id);
+            Long longGet = Long.valueOf(eventsGroupByRequests.get(qEvent.id));
 
             customerExpression = customerExpression
-                        .and(qEvent.confirmedRequests.gt(intGet));
+                        .and(qEvent.confirmedRequests.gt(longGet));
             }
         }
 
