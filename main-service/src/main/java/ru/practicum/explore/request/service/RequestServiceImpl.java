@@ -76,7 +76,7 @@ public class RequestServiceImpl implements RequestService {
             throw new ResponseStatusException(HttpStatus.resolve(404), "");
         }
 
-        if (event.getInitiator().getId() == userId) {
+        if (event.getInitiator().getId().equals(userId)) {
             try {
                 requestList = requestRepository.findAllByEventOrderById(event);
             } catch (NoSuchElementException exception) {
@@ -110,7 +110,7 @@ public class RequestServiceImpl implements RequestService {
             throw new ResponseStatusException(HttpStatus.resolve(404), "");
         }
 
-        if (userId != request.getRequester().getId()) {
+        if (!userId.equals(request.getRequester().getId())) {
             throw new ResponseStatusException(HttpStatus.resolve(403), "");
         }
 
@@ -140,7 +140,7 @@ public class RequestServiceImpl implements RequestService {
             throw new ResponseStatusException(HttpStatus.resolve(404), "");
         }
 
-        if (event.getInitiator().getId() != userId) {
+        if (!event.getInitiator().getId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.resolve(403), "");
         }
 
