@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class HitServiceImpl implements HitService{
+public class HitServiceImpl implements HitService {
 
     final HitRepository hitRepository;
 
@@ -81,8 +81,7 @@ public class HitServiceImpl implements HitService{
 
                 if (mapShortViewHits.containsKey(shortViewHit)) {
                     mapShortViewHits.put(shortViewHit,mapShortViewHits.get(shortViewHit) + 1);
-                }
-                else {
+                } else {
                     mapShortViewHits.put(shortViewHit,1);
                 }
             }
@@ -110,8 +109,7 @@ public class HitServiceImpl implements HitService{
 
             if (mapShortViewStats.containsKey(shortViewStats)) {
                 mapShortViewStats.put(shortViewStats,mapShortViewStats.get(shortViewStats) + 1);
-            }
-            else {
+            } else {
                 mapShortViewStats.put(shortViewStats,1);
             }
         }

@@ -2,7 +2,6 @@ package ru.practicum.explore.hit;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explore.hit.dto.EndpointHit;
 import ru.practicum.explore.hit.dto.ViewStats;
@@ -11,8 +10,6 @@ import ru.practicum.explore.hit.service.HitService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
