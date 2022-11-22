@@ -273,7 +273,6 @@ public class EventServiceImpl implements EventService {
             customerExpression = customerExpression
                     .and(qEvent.initiator.id.in(users));
         }
-
         /*
         if (states != null && !states.isEmpty()) {
             customerExpression = customerExpression
