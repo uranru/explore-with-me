@@ -142,7 +142,7 @@ public class EventServiceImpl implements EventService {
                         .app("main-service")
                         .uri(request.getRequestURI())
                         .ip(request.getRemoteAddr())
-                        .timestamp(LocalDateTime.now().format(EventMapper.FORMATTER))
+                        .timestamp(LocalDateTime.now().format(EventMapper.formatter))
                 .build());
 
         return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
@@ -153,7 +153,7 @@ public class EventServiceImpl implements EventService {
         log.debug("Выполнен метод getUserEventFullDtoById({},{})",userId,eventId);
         Event event = getEventById(eventId);
 
-        if (event.getInitiator().getId() == userId) {
+        if (event.getInitiator().getId().equals(userId)) {
             CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
             UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
             return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
@@ -223,7 +223,7 @@ public class EventServiceImpl implements EventService {
             throw new ResponseStatusException(HttpStatus.resolve(404), "");
         }
 
-        if (userId != event.getInitiator().getId()) {
+        if (!userId.equals(event.getInitiator().getId())) {
             throw new ResponseStatusException(HttpStatus.resolve(500), "");
         }
 
@@ -282,11 +282,11 @@ public class EventServiceImpl implements EventService {
         }
         if (rangeStart != null) {
             customerExpression = customerExpression
-                    .and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart,EventMapper.FORMATTER)));
+                    .and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart,EventMapper.formatter)));
         }
         if (rangeEnd != null) {
             customerExpression = customerExpression
-                    .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.FORMATTER)));
+                    .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.formatter)));
         }
 
         log.debug("Query DSL customerExpression: {}", customerExpression);
@@ -332,11 +332,11 @@ public class EventServiceImpl implements EventService {
         }
         if (rangeStart != null) {
             customerExpression = customerExpression
-                    .and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart,EventMapper.FORMATTER)));
+                    .and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart,EventMapper.formatter)));
         }
         if (rangeEnd != null) {
             customerExpression = customerExpression
-                    .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.FORMATTER)));
+                    .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.formatter)));
         }
         if (onlyAvailable != null) {
             if (onlyAvailable == true) {
@@ -402,7 +402,7 @@ public class EventServiceImpl implements EventService {
         event.setAnnotation(updateEventRequest.getAnnotation());
         event.setCategory(categoryService.getCategoryById(updateEventRequest.getCategory()));
         event.setDescription(updateEventRequest.getDescription());
-        event.setEventDate(LocalDateTime.parse(updateEventRequest.getEventDate(),EventMapper.FORMATTER));
+        event.setEventDate(LocalDateTime.parse(updateEventRequest.getEventDate(),EventMapper.formatter));
         event.setPaid(updateEventRequest.getPaid());
         event.setParticipantLimit(updateEventRequest.getParticipantLimit());
         event.setTitle(updateEventRequest.getTitle());
@@ -416,7 +416,7 @@ public class EventServiceImpl implements EventService {
         event.setAnnotation(adminUpdateEventRequest.getAnnotation());
         event.setCategory(categoryService.getCategoryById(adminUpdateEventRequest.getCategory()));
         event.setDescription(adminUpdateEventRequest.getDescription());
-        event.setEventDate(LocalDateTime.parse(adminUpdateEventRequest.getEventDate(),EventMapper.FORMATTER));
+        event.setEventDate(LocalDateTime.parse(adminUpdateEventRequest.getEventDate(),EventMapper.formatter));
         if (adminUpdateEventRequest.getLocation() != null) {
             event.setLocationLat(adminUpdateEventRequest.getLocation().get("lat"));
             event.setLocationLon(adminUpdateEventRequest.getLocation().get("lon"));

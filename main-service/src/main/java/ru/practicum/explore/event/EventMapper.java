@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class EventMapper {
 
-    public static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Event toEvent(NewEventDto newEventDto, Category category, User initiator) {
         if (newEventDto == null) {
@@ -27,7 +27,7 @@ public class EventMapper {
                 newEventDto.getAnnotation(),
                 category,
                 newEventDto.getDescription(),
-                LocalDateTime.parse(newEventDto.getEventDate(), FORMATTER),
+                LocalDateTime.parse(newEventDto.getEventDate(), formatter),
                 newEventDto.getLocation().get("lat"),
                 newEventDto.getLocation().get("lon"),
                 newEventDto.getPaid(),
@@ -54,7 +54,7 @@ public class EventMapper {
                 event.getAnnotation(),
                 categoryDto,
                 event.getDescription(),
-                event.getEventDate().format(FORMATTER),
+                event.getEventDate().format(formatter),
                 event.getPaid(),
                 event.getTitle(),
                 userShortDto,
@@ -71,7 +71,7 @@ public class EventMapper {
 
         String publishedOn = null;
         if (event.getPublishedOn() != null) {
-            publishedOn = event.getPublishedOn().format(FORMATTER);
+            publishedOn = event.getPublishedOn().format(formatter);
         }
 
         return new EventFullDto(
@@ -79,7 +79,7 @@ public class EventMapper {
                 event.getAnnotation(),
                 categoryDto,
                 event.getDescription(),
-                event.getEventDate().format(FORMATTER),
+                event.getEventDate().format(formatter),
                 Map.of("lat",event.getLocationLat(), "lon", event.getLocationLon()),
                 event.getPaid(),
                 event.getParticipantLimit(),
@@ -87,7 +87,7 @@ public class EventMapper {
                 event.getTitle(),
                 userShortDto,
                 event.getConfirmedRequests(),
-                event.getCreatedOn().format(FORMATTER),
+                event.getCreatedOn().format(formatter),
                 publishedOn,
                 null,
                 event.getState()

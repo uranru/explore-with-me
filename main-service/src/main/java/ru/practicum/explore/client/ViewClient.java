@@ -26,8 +26,8 @@ public class ViewClient extends BaseClient {
     }
 
     public Integer getHitsByEventId(String app, Long eventId) {
-        String start = LocalDateTime.now().minusYears(1).format(EventMapper.FORMATTER);
-        String end = LocalDateTime.now().plusYears(1).format(EventMapper.FORMATTER);
+        String start = LocalDateTime.now().minusYears(1).format(EventMapper.formatter);
+        String end = LocalDateTime.now().plusYears(1).format(EventMapper.formatter);
 
         ResponseEntity<Object> response =  get("?start=" + start + "&end=" + end + "&uris=/events/" + eventId + "&unique=true");
 
