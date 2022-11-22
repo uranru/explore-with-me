@@ -268,18 +268,24 @@ public class EventServiceImpl implements EventService {
         QEvent qEvent = QEvent.event;
         BooleanExpression customerExpression = qEvent.isNotNull();
 
+
         if (users != null && !users.isEmpty()) {
             customerExpression = customerExpression
                     .and(qEvent.initiator.id.in(users));
         }
+
+        /*
         if (states != null && !states.isEmpty()) {
             customerExpression = customerExpression
-                    .and(QEvent.event.state.in(states));
+                    .and(qEvent.state.equals(states.get(0)));
         }
+        */
         if (categories != null && !categories.isEmpty()) {
             customerExpression = customerExpression
                     .and(qEvent.category.id.in(categories));
         }
+
+
         if (rangeStart != null) {
             customerExpression = customerExpression
                     .and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart,EventMapper.formatter)));
@@ -288,6 +294,7 @@ public class EventServiceImpl implements EventService {
             customerExpression = customerExpression
                     .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.formatter)));
         }
+
 
         log.debug("Query DSL customerExpression: {}", customerExpression);
 
@@ -340,10 +347,9 @@ public class EventServiceImpl implements EventService {
         }
         if (onlyAvailable != null) {
             if (onlyAvailable) {
-            Long longGet = Long.valueOf(eventsGroupByRequests.get(qEvent.id));
 
             customerExpression = customerExpression
-                        .and(qEvent.confirmedRequests.gt(longGet));
+                        .and(qEvent.confirmedRequests.gt(Integer.valueOf(eventsGroupByRequests.get(qEvent.id))));
             }
         }
 
