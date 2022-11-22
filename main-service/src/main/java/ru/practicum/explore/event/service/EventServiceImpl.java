@@ -341,8 +341,10 @@ public class EventServiceImpl implements EventService {
         if (onlyAvailable != null) {
             if (onlyAvailable == true) {
 
+            Integer intGet = eventsGroupByRequests.get(qEvent.id);
+
             customerExpression = customerExpression
-                        .and(qEvent.confirmedRequests.gt((Integer) eventsGroupByRequests.get(qEvent.id)));
+                        .and(qEvent.confirmedRequests.gt(intGet));
             }
         }
 
