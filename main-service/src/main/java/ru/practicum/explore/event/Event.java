@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-import ru.practicum.explore.category.Сategory;
+import ru.practicum.explore.category.Category;
 import ru.practicum.explore.user.User;
 
 @ToString
@@ -29,7 +29,7 @@ public class Event {
     private String annotation;
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Сategory category;
+    private Category category;
     @Column(name = "event_description")
     @NotEmpty @NotNull
     private String description;

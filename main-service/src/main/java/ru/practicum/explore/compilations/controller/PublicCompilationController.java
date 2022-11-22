@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.explore.compilations.dto.CompilationDto;
 import ru.practicum.explore.compilations.service.CompilationService;
-import ru.practicum.explore.event.EventSort;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;

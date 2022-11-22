@@ -8,8 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.explore.category.Category;
 import ru.practicum.explore.category.dto.CategoryDto;
-import ru.practicum.explore.category.Сategory;
 import ru.practicum.explore.category.CategoryMapper;
 import ru.practicum.explore.category.CategoryRepository;
 import ru.practicum.explore.exeption.*;
@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto addCategory(CategoryDto categoryDto) {
 
         log.debug("Выполнен метод addСategory: {}",categoryDto);
-        Сategory category = CategoryMapper.toСategory(categoryDto);
+        Category category = CategoryMapper.toСategory(categoryDto);
 
         try {
             return CategoryMapper.toСategoryDto(categoryRepository.save(category));
@@ -49,9 +49,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Сategory getCategoryById(Long id) {
+    public Category getCategoryById(Long id) {
         log.debug("Выполнен метод getСategoryById: {}", id);
-        Сategory category = new Сategory();
+        Category category = new Category();
         try {
             category = categoryRepository.findById(id).get();
         } catch (NoSuchElementException exception) {
@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto) {
         log.debug("Выполнен метод updateСategory: {}",categoryDto);
-        Сategory category;
+        Category category;
         try {
             category = categoryRepository.save(CategoryMapper.toСategory(categoryDto));
         } catch (NoSuchElementException exception) {
@@ -92,10 +92,10 @@ public class CategoryServiceImpl implements CategoryService {
                     HttpStatus.resolve(400), "");
         }
 
-        Page<Сategory> categoryList = categoryRepository.findAll(PageRequest.of(from / size, size));
+        Page<Category> categoryList = categoryRepository.findAll(PageRequest.of(from / size, size));
 
         List<CategoryDto> categoryDtoList = new ArrayList<>();
-        for (Сategory category: categoryList) {
+        for (Category category: categoryList) {
             categoryDtoList.add(CategoryMapper.toСategoryDto(category));
         }
 

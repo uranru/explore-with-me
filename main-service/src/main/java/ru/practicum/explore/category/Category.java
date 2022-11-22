@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 @Entity
 @Table(name = "categories")
-public class Сategory {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "сategory_id")
@@ -18,7 +18,7 @@ public class Сategory {
     @Column(name = "сategory_name")
     String name;
 
-    public Сategory() {
+    public Category() {
     }
 
 }

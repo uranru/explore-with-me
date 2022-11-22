@@ -1,7 +1,7 @@
 package ru.practicum.explore.event;
 
 
-import ru.practicum.explore.category.Сategory;
+import ru.practicum.explore.category.Category;
 import ru.practicum.explore.category.dto.CategoryDto;
 import ru.practicum.explore.event.dto.EventFullDto;
 import ru.practicum.explore.event.dto.EventShortDto;
@@ -17,7 +17,7 @@ public class EventMapper {
 
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public static Event toEvent(NewEventDto newEventDto, Сategory category, User initiator) {
+    public static Event toEvent(NewEventDto newEventDto, Category category, User initiator) {
         if (newEventDto == null) {
             return null;
         }

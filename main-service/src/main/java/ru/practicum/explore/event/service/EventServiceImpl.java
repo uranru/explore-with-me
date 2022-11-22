@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import ru.practicum.explore.category.Сategory;
+import ru.practicum.explore.category.Category;
 import ru.practicum.explore.category.dto.CategoryDto;
 import ru.practicum.explore.category.CategoryMapper;
 import ru.practicum.explore.category.service.CategoryService;
@@ -50,7 +50,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto addUserEvent(NewEventDto newEventDto, Long initiatorId) {
         log.debug("Выполнен метод addUserEvent({}, {})", newEventDto, initiatorId);
-        Сategory category = categoryService.getCategoryById(newEventDto.getCategory());
+        Category category = categoryService.getCategoryById(newEventDto.getCategory());
         CategoryDto categoryDto = CategoryMapper.toСategoryDto(category);
         User user = userService.getUserById(initiatorId);
         UserShortDto userShortDto = UserMapper.toUserShortDto(user);
@@ -109,7 +109,7 @@ public class EventServiceImpl implements EventService {
         event.setPublishedOn(LocalDateTime.now());
         Event updateEvent = eventRepository.save(event);
 
-        Сategory category = updateEvent.getCategory();
+        Category category = updateEvent.getCategory();
         CategoryDto categoryDto = CategoryMapper.toСategoryDto(category);
         User user = updateEvent.getInitiator();
         UserShortDto userShortDto = UserMapper.toUserShortDto(user);
@@ -322,7 +322,7 @@ public class EventServiceImpl implements EventService {
                             .or(qEvent.description.containsIgnoreCase(text))
                     );
         }
-        if (categories !=null && !categories.isEmpty()) {
+        if (categories != null && !categories.isEmpty()) {
             customerExpression = customerExpression
                     .and(qEvent.category.id.in(categories));
         }
@@ -339,7 +339,7 @@ public class EventServiceImpl implements EventService {
                     .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.formatter)));
         }
         if (onlyAvailable != null) {
-            if (onlyAvailable == true){
+            if (onlyAvailable == true) {
 
             customerExpression = customerExpression
                         .and(qEvent.confirmedRequests.gt(eventsGroupByRequests.get(qEvent.id)));
