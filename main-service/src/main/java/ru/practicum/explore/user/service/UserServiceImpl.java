@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService{
         List<User> userList = new ArrayList<>();
         List<UserDto> userDtoList = new ArrayList<>();
 
-        if (id >0) {
+        if (id > 0) {
             try {
                 User user = userRepository.findById(id).get();
                 userList.add(user);

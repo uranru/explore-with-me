@@ -101,7 +101,7 @@ public class EventServiceImpl implements EventService {
             throw new ResponseStatusException(HttpStatus.resolve(500), "");
         }
 
-        if (event.getEventDate().isBefore(LocalDateTime.now().minusHours(1))){
+        if (event.getEventDate().isBefore(LocalDateTime.now().minusHours(1))) {
             throw new ResponseStatusException(HttpStatus.resolve(500), "");
         }
 
@@ -268,23 +268,23 @@ public class EventServiceImpl implements EventService {
         QEvent qEvent = QEvent.event;
         BooleanExpression customerExpression = qEvent.isNotNull();
 
-        if (users != null && !users.isEmpty() ) {
+        if (users != null && !users.isEmpty()) {
             customerExpression = customerExpression
                     .and(qEvent.initiator.id.in(users));
         }
-        if (states !=null && !states.isEmpty()) {
+        if (states != null && !states.isEmpty()) {
             customerExpression = customerExpression
                     .and(QEvent.event.state.in(states));
         }
-        if (categories !=null && !categories.isEmpty()) {
+        if (categories != null && !categories.isEmpty()) {
             customerExpression = customerExpression
                     .and(qEvent.category.id.in(categories));
         }
-        if (rangeStart !=null) {
+        if (rangeStart != null) {
             customerExpression = customerExpression
                     .and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart,EventMapper.formatter)));
         }
-        if (rangeEnd !=null) {
+        if (rangeEnd != null) {
             customerExpression = customerExpression
                     .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.formatter)));
         }
@@ -316,7 +316,7 @@ public class EventServiceImpl implements EventService {
         QEvent qEvent = QEvent.event;
         BooleanExpression customerExpression = qEvent.isNotNull();
 
-        if (text != null && !text.isEmpty() ) {
+        if (text != null && !text.isEmpty()) {
             customerExpression = customerExpression
                     .and((qEvent.annotation.containsIgnoreCase(text))
                             .or(qEvent.description.containsIgnoreCase(text))
@@ -326,20 +326,20 @@ public class EventServiceImpl implements EventService {
             customerExpression = customerExpression
                     .and(qEvent.category.id.in(categories));
         }
-        if (paid !=null) {
+        if (paid != null) {
             customerExpression = customerExpression
                     .and(qEvent.paid.eq(paid));
         }
-        if (rangeStart !=null) {
+        if (rangeStart != null) {
             customerExpression = customerExpression
                     .and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart,EventMapper.formatter)));
         }
-        if (rangeEnd !=null) {
+        if (rangeEnd != null) {
             customerExpression = customerExpression
                     .and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd,EventMapper.formatter)));
         }
-        if (onlyAvailable !=null ) {
-            if (onlyAvailable == true) {
+        if (onlyAvailable != null) {
+            if (onlyAvailable == true){
 
             customerExpression = customerExpression
                         .and(qEvent.confirmedRequests.gt(eventsGroupByRequests.get(qEvent.id)));
@@ -436,11 +436,11 @@ public class EventServiceImpl implements EventService {
         Map<Long, Integer> eventsCount = new HashMap<>();
         List<Request> requests = requestRepository.findAll();
         for (Request request : requests) {
-            Long event_id = request.getEvent().getId();
-            if (eventsCount.containsKey(event_id)) {
-                eventsCount.put(event_id, eventsCount.get(event_id) + 1);
+            Long eventId = request.getEvent().getId();
+            if (eventsCount.containsKey(eventId)) {
+                eventsCount.put(eventId, eventsCount.get(eventId) + 1);
             } else {
-                eventsCount.put(event_id, 1);
+                eventsCount.put(eventId, 1);
             }
         }
         return eventsCount;

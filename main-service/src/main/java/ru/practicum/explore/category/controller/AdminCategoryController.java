@@ -16,25 +16,25 @@ public class AdminCategoryController {
     private final CategoryService categoryService;
 
     @PostMapping(value = "/admin/categories")
-    public CategoryDto addСategory(@RequestBody @Valid CategoryDto categoryDto) {
-        CategoryDto newСategoryDto = categoryService.addCategory(categoryDto);
-        log.info("Выполнен запрос на добавление нового объекта: {}",newСategoryDto);
+    public CategoryDto addCategory(@RequestBody @Valid CategoryDto categoryDto) {
+        CategoryDto newCategoryDto = categoryService.addCategory(categoryDto);
+        log.info("Выполнен запрос на добавление нового объекта: {}",newCategoryDto);
 
-        return newСategoryDto;
+        return newCategoryDto;
     }
 
     @DeleteMapping("/admin/categories/{id}")
-    public void deleteСategoryById(@PathVariable Long id) {
+    public void deleteCategoryById(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
         log.info("Выполнен запрос на удаление категории с ID {}", id);
     }
 
     @PatchMapping(value = "/admin/categories")
-    public CategoryDto updateСategory(@RequestBody CategoryDto categoryDto) {
-        CategoryDto newСategoryDto = categoryService.updateCategory(categoryDto);
-        log.info("Выполнен запрос на обновление категории: {}",newСategoryDto);
+    public CategoryDto updateCategory(@RequestBody CategoryDto categoryDto) {
+        CategoryDto newCategoryDto = categoryService.updateCategory(categoryDto);
+        log.info("Выполнен запрос на обновление категории: {}",newCategoryDto);
 
-        return newСategoryDto;
+        return newCategoryDto;
     }
 
 }

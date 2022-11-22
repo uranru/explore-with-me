@@ -1,11 +1,9 @@
 package ru.practicum.explore.request.service;
 
-import ru.practicum.explore.event.Event;
 import ru.practicum.explore.request.ParticipationRequestDto;
 import ru.practicum.explore.request.RequestStateResolution;
 
 import java.util.List;
-import java.util.Map;
 
 public interface RequestService {
     ParticipationRequestDto addUserRequest(Long userId, Long eventId);
