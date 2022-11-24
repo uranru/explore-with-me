@@ -2,13 +2,16 @@ package ru.practicum.explore.compilations.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.explore.compilations.dto.CompilationDto;
 import ru.practicum.explore.compilations.dto.NewCompilationDto;
 import ru.practicum.explore.compilations.service.CompilationService;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.util.NoSuchElementException;
 
 
 @Slf4j
@@ -84,8 +87,12 @@ public class AdminCompilationController {
             @PathVariable @Positive Long compilationId) {
 
         log.info("Выполнен запрос DEL /admin/compilations/{}", compilationId);
-        compilationService
-                .adminDeleteCompilation(compilationId);
+        try {
+            compilationService
+                    .adminDeleteCompilation(compilationId);
+        } catch (NoSuchElementException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
+        }
     }
 
 }

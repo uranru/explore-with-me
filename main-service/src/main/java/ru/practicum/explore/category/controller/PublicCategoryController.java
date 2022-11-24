@@ -17,13 +17,12 @@ public class PublicCategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/categories/{id}")
-    public CategoryDto getСategoryById(@PathVariable Long id,
+    public CategoryDto getCategoryById(@PathVariable Long id,
                                        HttpServletRequest request) {
 
-        log.info("Выполнен запрос:: client IP {}, endpoint path {}", request.getRemoteAddr(), request.getRequestURI());
-        CategoryDto categoryDto = categoryService.getCategoryDtoById(id);
+        log.debug("Выполнен запрос:: client IP {}, endpoint path {}", request.getRemoteAddr(), request.getRequestURI());
 
-        return categoryDto;
+        return categoryService.getCategoryDtoById(id);
     }
 
     @GetMapping("/categories")

@@ -131,17 +131,17 @@ public class RequestServiceImpl implements RequestService {
         try {
             event = eventService.getEventById(eventId);
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         try {
             request = requestRepository.findById(reqId).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         if (!event.getInitiator().getId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.resolve(403), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         switch (resolution) {
@@ -152,7 +152,7 @@ public class RequestServiceImpl implements RequestService {
                 request.setStatus(RequestState.CONFIRMED);
                 break;
             default:
-                throw new ResponseStatusException(HttpStatus.resolve(404), "");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         request = requestRepository.save(request);

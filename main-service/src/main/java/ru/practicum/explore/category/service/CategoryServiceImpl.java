@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             return CategoryMapper.toСategoryDto(categoryRepository.save(category));
         } catch (DataIntegrityViolationException exception) {
-            throw new ApiStorageException(exception.getMessage());
+            throw new ApiStorageException("Category already exists");
         }
     }
 
@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             categoryRepository.deleteById(id);
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         }
     }
 
@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             category = categoryRepository.findById(id).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         }
 
        return category;
@@ -73,11 +73,11 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             category = categoryRepository.save(CategoryMapper.toСategory(categoryDto));
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         } catch (ConstraintViolationException exception) {
             throw new ApiConstraintViolationException(exception.getMessage());
         } catch (DataIntegrityViolationException exception) {
-            throw new ApiStorageException(exception.getMessage());
+            throw new ApiStorageException("Category already exists");
         }
 
         return CategoryMapper.toСategoryDto(category);

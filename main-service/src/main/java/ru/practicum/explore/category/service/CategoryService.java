@@ -17,6 +17,6 @@ public interface CategoryService {
 
     CategoryDto updateCategory(CategoryDto category);
 
-    public List<CategoryDto> findAllCategoryOrderById(int from, int size);
+    List<CategoryDto> findAllCategoryOrderById(int from, int size);
 
 }

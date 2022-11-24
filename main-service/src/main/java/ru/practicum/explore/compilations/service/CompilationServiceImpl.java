@@ -38,7 +38,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation;
 
         if (newCompilationDto == null) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         try {
@@ -64,13 +64,13 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation;
 
         if (compilationId == null || compilationId < 1) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         try {
             compilation = compilationRepository.findById(compilationId).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
        }
 
         CompilationDto compilationDto = CompilationMapper
@@ -87,7 +87,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto adminUpdateCompilationAddEvent(Long compilationId, Long eventId) {
         log.debug("Выполнен метод adminUpdateCompilationAddEvent({}, {})", compilationId, eventId);
         if (compilationId == null || eventId == null) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         Compilation compilation = compilationRepository.findById(compilationId).get();
@@ -113,7 +113,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto adminUpdateCompilationDeleteEvent(Long compilationId, Long eventId) {
         log.debug("Выполнен метод adminUpdateCompilationDeleteEvent({}, {})", compilationId, eventId);
         if (compilationId == null || eventId == null) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         Compilation compilation = compilationRepository.findById(compilationId).get();
@@ -141,13 +141,13 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation;
 
         if (compilationId == null || compilationId < 1) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         try {
             compilation = compilationRepository.findById(compilationId).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         compilation.setPinned(pinned);
@@ -172,13 +172,13 @@ public class CompilationServiceImpl implements CompilationService {
             try {
                 compilationList = compilationRepository.findCompilationsByPinned(true,pageable).getContent();
             } catch (NoSuchElementException exception) {
-                throw new ResponseStatusException(HttpStatus.resolve(404), "");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
             }
         } else {
             try {
                 compilationList = compilationRepository.findAll(pageable).getContent();
             } catch (NoSuchElementException exception) {
-                throw new ResponseStatusException(HttpStatus.resolve(404), "");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
             }
         }
 
@@ -201,7 +201,7 @@ public class CompilationServiceImpl implements CompilationService {
         try {
             compilationRepository.deleteById(compilationId);
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
     }
 

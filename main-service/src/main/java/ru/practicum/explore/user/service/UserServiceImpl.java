@@ -3,6 +3,7 @@ package ru.practicum.explore.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
         try {
             return UserMapper.toUserDto(userRepository.save(user));
         } catch (DataIntegrityViolationException exception) {
-            throw new ApiStorageException(exception.getMessage());
+            throw new ApiStorageException("User already exists");
         } catch (ConstraintViolationException exception) {
             throw new ApiConstraintViolationException(exception.getMessage());
         }
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userRepository.findById(id).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         return user;
@@ -83,7 +84,9 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.deleteById(id);
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
+        } catch (EmptyResultDataAccessException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         }
     }
 

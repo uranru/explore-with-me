@@ -77,7 +77,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto approvalAdminEvent(Long eventId, EventStateResolution resolution) {
         log.debug("Выполнен метод publishEvent{{}, {}}", eventId, resolution);
-        EventState eventState = EventState.PENDING;
+        EventState eventState;
         Event event;
 
         switch (resolution) {
@@ -88,21 +88,21 @@ public class EventServiceImpl implements EventService {
                 eventState = EventState.CANCELED;
                 break;
             default:
-                throw new ResponseStatusException(HttpStatus.resolve(500), "");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         try {
             event = eventRepository.findById(eventId).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         }
 
         if (!event.getState().equals(EventState.PENDING)) {
-            throw new ResponseStatusException(HttpStatus.resolve(500), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         if (event.getEventDate().isBefore(LocalDateTime.now().minusHours(1))) {
-            throw new ResponseStatusException(HttpStatus.resolve(500), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         event.setState(eventState);
@@ -125,7 +125,7 @@ public class EventServiceImpl implements EventService {
         try {
             event = eventRepository.findById(eventId).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         }
 
         return event;
@@ -158,7 +158,7 @@ public class EventServiceImpl implements EventService {
             UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
             return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
         } else {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
     }
 
@@ -173,7 +173,7 @@ public class EventServiceImpl implements EventService {
             user = userService.getUserById(initiatorId);
             eventList = eventRepository.findAllByInitiatorOrderById(user, pageable).getContent();
         }  catch (NoSuchElementException exception) {
-           throw new ResponseStatusException(HttpStatus.resolve(404), "");
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         }
 
         eventList.stream().forEach(
@@ -197,11 +197,11 @@ public class EventServiceImpl implements EventService {
         try {
             event = eventRepository.findById(updateEventRequest.getEventId()).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         }
 
         if (!userId.equals(event.getInitiator().getId())) {
-            throw new ResponseStatusException(HttpStatus.resolve(500), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         event = eventRepository.save(updateEvent(event,updateEventRequest));
@@ -220,15 +220,15 @@ public class EventServiceImpl implements EventService {
         try {
             event = eventRepository.findById(eventId).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
         }
 
         if (!userId.equals(event.getInitiator().getId())) {
-            throw new ResponseStatusException(HttpStatus.resolve(500), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         if (!event.getState().equals(EventState.PENDING)) {
-            throw new ResponseStatusException(HttpStatus.resolve(500), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         event.setState(EventState.CANCELED);
@@ -248,7 +248,7 @@ public class EventServiceImpl implements EventService {
         try {
             event = eventRepository.findById(eventId).get();
         } catch (NoSuchElementException exception) {
-            throw new ResponseStatusException(HttpStatus.resolve(404), "");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
         event = eventRepository.save(updateEvent(event,adminUpdateEventRequest));
@@ -273,9 +273,6 @@ public class EventServiceImpl implements EventService {
             customerExpression = customerExpression
                     .and(qEvent.initiator.id.in(users));
         }
-
-        //List<String> stringList = new ArrayList<>();
-        //states.stream().forEach(myEnum -> stringList.add(myEnum.toString()));
 
         if (states != null && !states.isEmpty()) {
             customerExpression = customerExpression
