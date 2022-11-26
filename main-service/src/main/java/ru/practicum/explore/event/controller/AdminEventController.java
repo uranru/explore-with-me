@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explore.event.service.EventService;
 import ru.practicum.explore.event.enums.EventState;
-import ru.practicum.explore.event.enums.EventStateResolution;
 import ru.practicum.explore.event.dto.*;
 
 import javax.validation.constraints.NotNull;

@@ -3,7 +3,6 @@ package ru.practicum.explore.event.service;
 import org.springframework.data.domain.Pageable;
 import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.event.enums.EventState;
-import ru.practicum.explore.event.enums.EventStateResolution;
 import ru.practicum.explore.event.dto.*;
 
 import javax.servlet.http.HttpServletRequest;

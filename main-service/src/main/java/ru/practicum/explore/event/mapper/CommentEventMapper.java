@@ -6,7 +6,7 @@ import ru.practicum.explore.event.model.Event;
 
 public class CommentEventMapper {
 
-    public static CommentEvent toCommentEvent(CommentEventDto commentEventDto, Event event){
+    public static CommentEvent toCommentEvent(CommentEventDto commentEventDto, Event event) {
         if (commentEventDto == null) {
             return null;
         }
@@ -17,7 +17,7 @@ public class CommentEventMapper {
                 .build();
     }
 
-    public static CommentEventDto toCommentEventDto(CommentEvent commentEvent){
+    public static CommentEventDto toCommentEventDto(CommentEvent commentEvent) {
         if (commentEvent == null) {
             return null;
         }
