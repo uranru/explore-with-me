@@ -33,3 +33,6 @@ https://github.com/uranru/java-explore-with-me/pull/1
    Доработаны геты событий, евент содержит доп поле.  
 4. Исправить замечание и отправить на проверку (PATCH)  
    При изменении пользователем события он переходит в состояние PENDING.  
+
+https://github.com/uranru/java-explore-with-me/pull/2  
+
