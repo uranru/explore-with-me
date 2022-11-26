@@ -2,7 +2,7 @@ package ru.practicum.explore.compilations;
 
 import ru.practicum.explore.compilations.dto.CompilationDto;
 import ru.practicum.explore.compilations.dto.NewCompilationDto;
-import ru.practicum.explore.event.Event;
+import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.event.dto.EventShortDto;
 
 import java.util.List;

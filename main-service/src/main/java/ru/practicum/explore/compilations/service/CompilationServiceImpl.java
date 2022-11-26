@@ -12,7 +12,7 @@ import ru.practicum.explore.compilations.CompilationMapper;
 import ru.practicum.explore.compilations.CompilationRepository;
 import ru.practicum.explore.compilations.dto.CompilationDto;
 import ru.practicum.explore.compilations.dto.NewCompilationDto;
-import ru.practicum.explore.event.Event;
+import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.event.service.EventService;
 import ru.practicum.explore.event.dto.EventShortDto;
 import ru.practicum.explore.exeption.*;

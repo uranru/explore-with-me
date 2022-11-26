@@ -1,7 +1,7 @@
 package ru.practicum.explore.compilations;
 
 import lombok.*;
-import ru.practicum.explore.event.Event;
+import ru.practicum.explore.event.model.Event;
 
 
 import javax.persistence.*;

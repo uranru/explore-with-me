@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.practicum.explore.event.Event;
+import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.event.service.EventService;
 import ru.practicum.explore.request.*;
 import ru.practicum.explore.user.service.UserService;

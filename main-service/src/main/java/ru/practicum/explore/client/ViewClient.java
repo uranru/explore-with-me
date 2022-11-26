@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.explore.event.EventMapper;
+import ru.practicum.explore.event.mapper.EventMapper;
 import com.google.gson.Gson;
 
 import java.time.LocalDateTime;

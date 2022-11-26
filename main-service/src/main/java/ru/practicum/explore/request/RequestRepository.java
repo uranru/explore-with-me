@@ -1,7 +1,7 @@
 package ru.practicum.explore.request;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.explore.event.Event;
+import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.user.User;
 
 import java.util.List;

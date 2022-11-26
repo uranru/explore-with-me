@@ -1,4 +1,4 @@
-package ru.practicum.explore.event;
+package ru.practicum.explore.event.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import ru.practicum.explore.category.Category;
+import ru.practicum.explore.event.enums.EventState;
 import ru.practicum.explore.user.User;
 
 @ToString
