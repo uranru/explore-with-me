@@ -33,7 +33,7 @@ public interface EventService {
                                       String rangeStart, String rangeEnd, Pageable pageable);
 
     List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
-                                        String rangeEnd, Boolean onlyAvailable, Pageable pageable);
+                                        String rangeEnd, Boolean onlyAvailable, Pageable pageable, HttpServletRequest request);
 
     List<Event> toEventList(List<Long> eventIdList);
 

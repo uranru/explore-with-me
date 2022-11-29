@@ -35,6 +35,7 @@ public class PublicEventController {
 
     @GetMapping(value = "/events")
     public List<EventShortDto> getEvent(
+            HttpServletRequest request,
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) Boolean paid,
@@ -55,7 +56,7 @@ public class PublicEventController {
                 sortEvent = Sort.by("views");
         }
         List<EventShortDto> eventFullDtoList = eventService
-                .getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, PageRequest.of(from / size,size,sortEvent));
+                .getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, PageRequest.of(from / size,size,sortEvent),request);
         log.debug("Получен ответ:: {}", eventFullDtoList);
 
         return eventFullDtoList;

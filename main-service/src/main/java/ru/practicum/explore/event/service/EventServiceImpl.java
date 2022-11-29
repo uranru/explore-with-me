@@ -357,7 +357,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
-                                               String rangeEnd, Boolean onlyAvailable, Pageable pageable) {
+                                               String rangeEnd, Boolean onlyAvailable, Pageable pageable, HttpServletRequest request) {
         log.debug("Выполнен метод:: getPublicEvents");
 
         List<EventShortDto> eventShortDtoList = new ArrayList<>();
@@ -395,6 +395,13 @@ public class EventServiceImpl implements EventService {
                         .and(qEvent.confirmedRequests.gt(Integer.valueOf(eventsGroupByRequests.get(qEvent.id))));
             }
         }
+
+        hitClient.addHit(HitDto.builder()
+                .app("main-service")
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now().format(EventMapper.formatter))
+                .build());
 
         log.debug("Query DSL customerExpression:: {}", customerExpression);
 
