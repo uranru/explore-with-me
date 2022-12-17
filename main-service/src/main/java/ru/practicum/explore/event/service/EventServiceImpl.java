@@ -14,8 +14,14 @@ import ru.practicum.explore.category.service.CategoryService;
 import ru.practicum.explore.client.HitClient;
 import ru.practicum.explore.client.HitDto;
 import ru.practicum.explore.client.ViewClient;
-import ru.practicum.explore.event.*;
+import ru.practicum.explore.event.model.*;
 import ru.practicum.explore.event.dto.*;
+import ru.practicum.explore.event.enums.EventState;
+import ru.practicum.explore.event.mapper.CommentEventMapper;
+import ru.practicum.explore.event.mapper.EventMapper;
+import ru.practicum.explore.event.model.Event;
+import ru.practicum.explore.event.repository.CommentEventRepository;
+import ru.practicum.explore.event.repository.EventRepository;
 import ru.practicum.explore.request.Request;
 import ru.practicum.explore.request.RequestRepository;
 import ru.practicum.explore.user.User;
@@ -38,6 +44,7 @@ import java.util.*;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final CommentEventRepository commentEventRepository;
     private final RequestRepository requestRepository;
 
     private final CategoryService categoryService;
@@ -49,7 +56,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto addUserEvent(NewEventDto newEventDto, Long initiatorId) {
-        log.debug("Выполнен метод addUserEvent({}, {})", newEventDto, initiatorId);
+        log.debug("Выполнен метод:: addUserEvent({}, {})", newEventDto, initiatorId);
         Category category = categoryService.getCategoryById(newEventDto.getCategory());
         CategoryDto categoryDto = CategoryMapper.toСategoryDto(category);
         User user = userService.getUserById(initiatorId);
@@ -62,7 +69,7 @@ public class EventServiceImpl implements EventService {
             throw new ApiConstraintViolationException(exception.getMessage());
         }
 
-        log.debug("Выполнен маппинг toEvent: {}",event);
+        log.debug("Выполнен маппинг:: toEvent(...)");
 
         try {
             event = eventRepository.save(event);
@@ -75,21 +82,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto approvalAdminEvent(Long eventId, EventStateResolution resolution) {
-        log.debug("Выполнен метод publishEvent{{}, {}}", eventId, resolution);
-        EventState eventState;
+    public EventFullDto approvalAdminEvent(Long eventId) {
+        log.debug("Выполнен метод:: approvalAdminEvent{{}}", eventId);
         Event event;
-
-        switch (resolution) {
-            case publish:
-                eventState = EventState.PUBLISHED;
-                break;
-            case reject:
-                eventState = EventState.CANCELED;
-                break;
-            default:
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
-        }
+        EventState eventState = EventState.PUBLISHED;
 
         try {
             event = eventRepository.findById(eventId).get();
@@ -118,8 +114,46 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
+    public EventFullDto rejectAdminEvent(Long eventId, CommentEventDto commentEventDto) {
+        log.debug("Выполнен метод:: rejectAdminEvent{{}, {}}", eventId, commentEventDto);
+        Event event;
+        EventState eventState = EventState.CANCELED;
+
+        try {
+            event = eventRepository.findById(eventId).get();
+        } catch (NoSuchElementException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        }
+
+        if (!event.getState().equals(EventState.PENDING)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event state is not correct");
+        }
+
+        if (event.getEventDate().isBefore(LocalDateTime.now().minusHours(1))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
+        }
+
+        event.setState(eventState);
+        Event updateEvent = eventRepository.save(event);
+        if (commentEventDto != null) {
+            commentEventDto = CommentEventMapper
+                    .toCommentEventDto(commentEventRepository.save(CommentEventMapper.toCommentEvent(commentEventDto, updateEvent)));
+        }
+
+        Category category = updateEvent.getCategory();
+        CategoryDto categoryDto = CategoryMapper.toСategoryDto(category);
+        User user = updateEvent.getInitiator();
+        UserShortDto userShortDto = UserMapper.toUserShortDto(user);
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(updateEvent,categoryDto,userShortDto);
+        eventFullDto.setComment(commentEventDto);
+
+        return eventFullDto;
+    }
+
+    @Override
     public Event getEventById(Long eventId) {
-        log.debug("Выполнен метод getUserEventById({})",eventId);
+        log.debug("Выполнен метод:: getUserEventById({})",eventId);
 
         Event event;
         try {
@@ -133,7 +167,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEventFullDtoById(Long eventId, HttpServletRequest request) {
-        log.debug("Выполнен метод getEventFullDtoById({})",eventId);
+        log.debug("Выполнен метод:: getEventFullDtoById({})",eventId);
         Event event = getEventById(eventId);
         CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
@@ -145,18 +179,23 @@ public class EventServiceImpl implements EventService {
                         .timestamp(LocalDateTime.now().format(EventMapper.formatter))
                 .build());
 
-        return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event,categoryDto,userShortDto);
+        eventFullDto = updateEventFullDtoAddComment(eventFullDto);
+        return eventFullDto;
     }
 
     @Override
     public EventFullDto getUserEventFullDtoById(Long userId,Long eventId) {
-        log.debug("Выполнен метод getUserEventFullDtoById({},{})",userId,eventId);
+        log.debug("Выполнен метод:: getUserEventFullDtoById({},{})",userId,eventId);
         Event event = getEventById(eventId);
 
         if (event.getInitiator().getId().equals(userId)) {
             CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
             UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
-            return EventMapper.toEventFullDto(event,categoryDto,userShortDto);
+
+            EventFullDto eventFullDto = EventMapper.toEventFullDto(event,categoryDto,userShortDto);
+            eventFullDto = updateEventFullDtoAddComment(eventFullDto);
+            return eventFullDto;
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
@@ -185,13 +224,15 @@ public class EventServiceImpl implements EventService {
                 )
         );
 
+        eventShortDtoList.forEach(this::updateEventShortDtoAddComment);
+
         return eventShortDtoList;
     }
 
     @Override
     @Transactional
     public EventFullDto updateUserEvent(Long userId, UpdateEventRequest updateEventRequest) {
-        log.debug("Выполнен метод updateUserEvent({}, {})",userId, updateEventRequest);
+        log.debug("Выполнен метод:: updateUserEvent({}, {})",userId, updateEventRequest);
         Event event;
 
         try {
@@ -204,6 +245,7 @@ public class EventServiceImpl implements EventService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
         }
 
+        event.setState(EventState.PENDING);
         event = eventRepository.save(updateEvent(event,updateEventRequest));
         CategoryDto categoryDto = CategoryMapper.toСategoryDto(event.getCategory());
         UserShortDto userShortDto = UserMapper.toUserShortDto(event.getInitiator());
@@ -214,7 +256,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto cancelUserEvent(Long userId, Long eventId) {
-        log.debug("Выполнен метод cancelUserEvent({}, {})",userId, eventId);
+        log.debug("Выполнен метод:: cancelUserEvent({}, {})",userId, eventId);
         Event event;
 
         try {
@@ -242,7 +284,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto updateAdminEvent(Long eventId, AdminUpdateEventRequest adminUpdateEventRequest) {
-        log.debug("Выполнен метод updateAdminEvent({}, {})",eventId, adminUpdateEventRequest);
+        log.debug("Выполнен метод:: updateAdminEvent({}, {})",eventId, adminUpdateEventRequest);
         Event event;
 
         try {
@@ -295,7 +337,7 @@ public class EventServiceImpl implements EventService {
         }
 
 
-        log.debug("Query DSL customerExpression: {}", customerExpression);
+        log.debug("Query DSL customerExpression:: {}", customerExpression);
 
         List<Event> eventList = eventRepository.findAll(customerExpression,pageable).getContent();
 
@@ -308,13 +350,15 @@ public class EventServiceImpl implements EventService {
                 )
         );
 
+        eventFullDtoList.forEach(this::updateEventFullDtoAddComment);
+
         return eventFullDtoList;
     }
 
     @Override
     public List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
-                                               String rangeEnd, Boolean onlyAvailable, Pageable pageable) {
-        log.debug("Выполнен метод getPublicEvents");
+                                               String rangeEnd, Boolean onlyAvailable, Pageable pageable, HttpServletRequest request) {
+        log.debug("Выполнен метод:: getPublicEvents");
 
         List<EventShortDto> eventShortDtoList = new ArrayList<>();
         Map<Long,Integer> eventsGroupByRequests = groupCountRequests();
@@ -352,6 +396,13 @@ public class EventServiceImpl implements EventService {
             }
         }
 
+        hitClient.addHit(HitDto.builder()
+                .app("main-service")
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now().format(EventMapper.formatter))
+                .build());
+
         log.debug("Query DSL customerExpression:: {}", customerExpression);
 
         List<Event> eventList = eventRepository.findAll(customerExpression,pageable).getContent();
@@ -364,6 +415,8 @@ public class EventServiceImpl implements EventService {
                         )))
                 );
 
+        eventShortDtoList.forEach(this::updateEventShortDtoAddComment);
+
         eventShortDtoList.forEach(eventShortDto -> eventShortDto
                 .setViews(viewClient.getHitsByEventId("main-service", eventShortDto.getId())));
 
@@ -373,7 +426,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> toEventList(List<Long> eventIdList) {
-        log.debug("Выполнен метод toEventList({})", eventIdList);
+        log.debug("Выполнен метод:: toEventList({})", eventIdList);
         List<Event> eventList = new ArrayList<>();
 
         eventIdList.stream().forEach(
@@ -387,7 +440,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> toEventShortDtoList(List<Event> eventList) {
-        log.debug("Выполнен метод toEventShortDtoList(...)");
+        log.debug("Выполнен метод:: toEventShortDtoList(...)");
         List<EventShortDto> eventShortDtoList = new ArrayList<>();
 
         eventList.stream().forEach(
@@ -403,7 +456,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private Event updateEvent(Event event, UpdateEventRequest updateEventRequest) {
-        log.debug("Выполнен метод updateEvent({}, {})",event, updateEventRequest);
+        log.debug("Выполнен метод:: updateEvent({}, {})",event, updateEventRequest);
 
         event.setAnnotation(updateEventRequest.getAnnotation());
         event.setCategory(categoryService.getCategoryById(updateEventRequest.getCategory()));
@@ -417,7 +470,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private Event updateEvent(Event event, AdminUpdateEventRequest adminUpdateEventRequest) {
-        log.debug("Выполнен метод updateEvent({}, {})",event, adminUpdateEventRequest);
+        log.debug("Выполнен метод:: updateEvent({}, {})",event, adminUpdateEventRequest);
 
         event.setAnnotation(adminUpdateEventRequest.getAnnotation());
         event.setCategory(categoryService.getCategoryById(adminUpdateEventRequest.getCategory()));
@@ -438,7 +491,7 @@ public class EventServiceImpl implements EventService {
     }
 
     public Map<Long, Integer> groupCountRequests() {
-        log.debug("groupCountRequests");
+        log.debug("Выполнен метод:: groupCountRequests");
         Map<Long, Integer> eventsCount = new HashMap<>();
         List<Request> requests = requestRepository.findAll();
         for (Request request : requests) {
@@ -450,6 +503,36 @@ public class EventServiceImpl implements EventService {
             }
         }
         return eventsCount;
+    }
+
+    private EventFullDto updateEventFullDtoAddComment(EventFullDto eventFullDto) {
+        log.debug("Выполнен метод:: updateEventFullDtoAddComment");
+        if (eventFullDto == null) {
+            return null;
+        }
+
+        CommentEventDto commentEventDto =  CommentEventMapper
+                .toCommentEventDto(commentEventRepository.findCommentEventsByEvent_Id(eventFullDto.getId()));
+
+        if (commentEventDto != null) {
+            eventFullDto.setComment(commentEventDto);
+        }
+        return eventFullDto;
+    }
+
+    private EventShortDto updateEventShortDtoAddComment(EventShortDto eventShortDto) {
+        log.debug("Выполнен метод:: updateEventShortDtoAddComment");
+        if (eventShortDto == null) {
+            return null;
+        }
+
+        CommentEventDto commentEventDto =  CommentEventMapper
+                .toCommentEventDto(commentEventRepository.findCommentEventsByEvent_Id(eventShortDto.getId()));
+
+        if (commentEventDto != null) {
+            eventShortDto.setComment(commentEventDto.getText());
+        }
+        return eventShortDto;
     }
 
 }

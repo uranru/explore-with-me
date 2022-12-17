@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.explore.category.dto.CategoryDto;
-import ru.practicum.explore.event.EventState;
+import ru.practicum.explore.event.enums.EventState;
 import ru.practicum.explore.user.dto.UserShortDto;
 
 import java.util.Map;
@@ -31,4 +31,5 @@ public class EventFullDto {
     String publishedOn;
     Integer views;
     EventState state;
+    CommentEventDto comment;
 }

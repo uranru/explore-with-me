@@ -1,9 +1,8 @@
 package ru.practicum.explore.event.service;
 
 import org.springframework.data.domain.Pageable;
-import ru.practicum.explore.event.Event;
-import ru.practicum.explore.event.EventState;
-import ru.practicum.explore.event.EventStateResolution;
+import ru.practicum.explore.event.model.Event;
+import ru.practicum.explore.event.enums.EventState;
 import ru.practicum.explore.event.dto.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +11,9 @@ import java.util.List;
 public interface EventService {
     EventFullDto addUserEvent(NewEventDto newEventDto, Long initiatorId);
 
-    EventFullDto approvalAdminEvent(Long eventId, EventStateResolution resolution);
+    EventFullDto approvalAdminEvent(Long eventId);
+
+    EventFullDto rejectAdminEvent(Long eventId, CommentEventDto commentEventDto);
 
     Event getEventById(Long eventId);
 
@@ -32,7 +33,7 @@ public interface EventService {
                                       String rangeStart, String rangeEnd, Pageable pageable);
 
     List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
-                                        String rangeEnd, Boolean onlyAvailable, Pageable pageable);
+                                        String rangeEnd, Boolean onlyAvailable, Pageable pageable, HttpServletRequest request);
 
     List<Event> toEventList(List<Long> eventIdList);
 

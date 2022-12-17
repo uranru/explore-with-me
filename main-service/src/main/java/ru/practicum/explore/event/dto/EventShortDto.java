@@ -22,4 +22,5 @@ public class EventShortDto {
     UserShortDto initiator;
     Integer confirmedRequests;
     Integer views;
+    String comment;
 }

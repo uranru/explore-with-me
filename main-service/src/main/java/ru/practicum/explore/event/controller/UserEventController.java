@@ -24,7 +24,7 @@ public class UserEventController {
             @RequestBody @NotNull NewEventDto newEventDto,
             @PathVariable @Positive Long userId) {
 
-        log.info("Выполнен запрос POST /users/{}/events: {}",userId, newEventDto);
+        log.info("Выполнен запрос:: POST /users/{}/events: {}",userId, newEventDto);
         EventFullDto eventFullDto = eventService.addUserEvent(newEventDto, userId);
 
         return eventFullDto;
@@ -39,7 +39,7 @@ public class UserEventController {
         log.info("Выполнен запрос:: GET /users/{}/events", userId);
         List<EventShortDto> eventShortDtoList = eventService
                 .getUserEventShortDtoById(userId, PageRequest.of(from / size,size));
-        log.info("Получен ответ: {}", eventShortDtoList);
+        log.info("Получен ответ:: {}", eventShortDtoList);
 
         return eventShortDtoList;
     }
@@ -49,9 +49,9 @@ public class UserEventController {
             @PathVariable @Positive Long userId,
             @PathVariable @Positive Long eventId) {
 
-        log.info("Выполнен запрос GET /users/{}/events/{}", userId, eventId);
+        log.info("Выполнен запрос:: GET /users/{}/events/{}", userId, eventId);
         EventFullDto eventFullDto = eventService.getUserEventFullDtoById(userId, eventId);
-        log.info("Получен ответ: {}", eventFullDto);
+        log.info("Получен ответ:: {}", eventFullDto);
 
         return eventFullDto;
     }
@@ -61,9 +61,9 @@ public class UserEventController {
             @PathVariable @Positive Long userId,
             @RequestBody @NotNull UpdateEventRequest updateEventRequest) {
 
-        log.info("Выполнен запрос PATCH /users/{}/events: {}", userId, updateEventRequest);
+        log.info("Выполнен запрос:: PATCH /users/{}/events: {}", userId, updateEventRequest);
         EventFullDto eventFullDto = eventService.updateUserEvent(userId, updateEventRequest);
-        log.info("Получен ответ: {}", eventFullDto);
+        log.info("Получен ответ:: {}", eventFullDto);
 
         return eventFullDto;
     }
@@ -73,9 +73,9 @@ public class UserEventController {
             @PathVariable @Positive Long userId,
             @PathVariable @Positive Long eventId) {
 
-        log.info("Выполнен запрос PATCH /users/{}/events/{}", userId, eventId);
+        log.info("Выполнен запрос:: PATCH /users/{}/events/{}", userId, eventId);
         EventFullDto eventFullDto = eventService.cancelUserEvent(userId, eventId);
-        log.info("Получен ответ: {}", eventFullDto);
+        log.info("Получен ответ:: {}", eventFullDto);
 
         return eventFullDto;
     }

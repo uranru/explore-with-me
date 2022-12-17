@@ -1,11 +1,11 @@
-package ru.practicum.explore.event;
+package ru.practicum.explore.event.mapper;
 
 
 import ru.practicum.explore.category.Category;
 import ru.practicum.explore.category.dto.CategoryDto;
-import ru.practicum.explore.event.dto.EventFullDto;
-import ru.practicum.explore.event.dto.EventShortDto;
-import ru.practicum.explore.event.dto.NewEventDto;
+import ru.practicum.explore.event.dto.*;
+import ru.practicum.explore.event.enums.EventState;
+import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.user.User;
 import ru.practicum.explore.user.dto.UserShortDto;
 
@@ -48,7 +48,6 @@ public class EventMapper {
             return null;
         }
 
-
         return new EventShortDto(
                 event.getId(),
                 event.getAnnotation(),
@@ -59,6 +58,7 @@ public class EventMapper {
                 event.getTitle(),
                 userShortDto,
                 event.getConfirmedRequests(),
+                null,
                 null
         );
 
@@ -90,7 +90,8 @@ public class EventMapper {
                 event.getCreatedOn().format(formatter),
                 publishedOn,
                 null,
-                event.getState()
+                event.getState(),
+                null
         );
     }
 
